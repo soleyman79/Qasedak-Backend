@@ -88,6 +88,8 @@ DATABASES = {
     }
 }
 
+DATABASE_URL = 'postgresql://root:NlzeOgOboBf2GYFHblAfwLP8@finn.iran.liara.ir:31721/postgres'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
