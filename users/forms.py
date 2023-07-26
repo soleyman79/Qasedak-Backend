@@ -10,11 +10,15 @@ class SignUpForm(UserCreationForm):
         model = User
         fields = ('email', 'phone', 'password1', 'password2')
 
-    def is_valid(self) -> bool:
-        valid = super().is_valid()
-        if User.objects.filter(Q(username=f'user-{self.cleaned_data["email"]}') | Q(username=f'user-{self.cleaned_data["phone"]}')):
-            return False
-        return valid
+    def is_valid(self):
+        if not super().is_valid():
+            return 'Not Valid Format'
+        try:
+            if User.objects.filter(Q(username=f'user-{self.cleaned_data["email"]}') | Q(username=f'user-{self.cleaned_data["phone"]}')):
+                return 'Duplicate Username'
+            return 'OK'
+        except:
+            pass
 
     def save(self, commit=True):
         user = super().save(commit=commit)

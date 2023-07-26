@@ -11,12 +11,13 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
 
-        if form.is_valid():
+        validation = form.is_valid()
+        if validation == 'OK':
             form.save()
             return HttpResponse('User Created Successfully')
 
         else:
-            return HttpResponse('Duplicate Username')
+            return HttpResponse(validation)
 
     else:
         return HttpResponse('only POST method allowed')
