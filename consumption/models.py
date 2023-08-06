@@ -16,15 +16,16 @@ class Text(Content):
     text = models.TextField(max_length=512)
 
 
-# class Video(Content):
-#     video = models.FileField(upload_to='videos_uploaded', 
-#                              null=False, 
-#                              validators=[FileExtensionValidator(allowed_extensions=['avi','mp4','webm','mkv'])])
+class Video(Content):
+    video = models.FileField(upload_to='videos_uploaded', 
+                             null=False, 
+                             validators=[FileExtensionValidator(allowed_extensions=['avi','mp4','webm','mkv'])])
 
 
-# class Photo(Content):
-#     photo = models.ImageField(upload_to='photos_uploaded')
+class Photo(Content):
+    photo = models.ImageField(upload_to='photos_uploaded')
     
 
 class Chanel(models.Model):
     name = models.CharField(unique=True, max_length=128)
+    description = models.CharField(max_length=512)

@@ -9,7 +9,7 @@ class Producer(models.Model):
     
 
 class Owner(Producer):
-    pass
+    profit = models.SmallIntegerField(null=True)
 
 
 class Manager(Producer):
