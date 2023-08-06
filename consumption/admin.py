@@ -1,3 +1,9 @@
 from django.contrib import admin
+from .models import Chanel
 
-# Register your models here.
+
+
+class ChanelAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+admin.site.register(Chanel, ChanelAdmin)

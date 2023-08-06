@@ -3,13 +3,17 @@ from django.core.validators import FileExtensionValidator
 
 
 
-# class Content(models.Model):
-#     title = models.CharField(max_length=64)
-#     summary = models.CharField(max_length=64)
-#     chanel = models.ForeignKey('Chanel', on_delete=models.CASCADE)
+class Content(models.Model):
+    title = models.CharField(max_length=64)
+    summary = models.CharField(max_length=64)
+    chanel = models.ForeignKey('Chanel', on_delete=models.CASCADE)
     
-#     class Meta:
-#         abstract = True
+    class Meta:
+        abstract = True
+
+
+class Text(Content):
+    text = models.TextField(max_length=512)
 
 
 # class Video(Content):
@@ -22,5 +26,5 @@ from django.core.validators import FileExtensionValidator
 #     photo = models.ImageField(upload_to='photos_uploaded')
     
 
-# class Chanel(models.Model):
-#     name = models.CharField(unique=True, max_length=128)
+class Chanel(models.Model):
+    name = models.CharField(unique=True, max_length=128)
