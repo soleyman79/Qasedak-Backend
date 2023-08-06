@@ -18,7 +18,7 @@ def userChannels(request):
         channelsId = Member.objects.filter(user=user).values_list('chanel', flat=True)
         channels = Chanel.objects.filter(id__in=channelsId)
         return JsonResponse({'names': list(channels.values_list('name', flat=True)),
-                             'descriptions': list(channels.values_list('descriptions', flat=True))})
+                             'description': list(channels.values_list('description', flat=True))})
     else:
         return HttpResponse('only POST method allowed')
     
@@ -27,14 +27,14 @@ def userChannels(request):
 def searchChanel(request):
     if request.method == 'POST':
         session = request.POST['session']
-        search = request.POST['session']
+        search = request.POST['search']
         if not Session.objects.filter(session=session).exists():
             return HttpResponse('Login First')
         
         user = Session.objects.get(session=session).user
         channels = Chanel.objects.filter(Q(name__icontains=search) | Q(description__icontains=search))
         return JsonResponse({'names': list(channels.values_list('name', flat=True)),
-                             'descriptions': list(channels.values_list('descriptions', flat=True))})
+                             'description': list(channels.values_list('description', flat=True))})
     else:
         return HttpResponse('only POST method allowed')
     
