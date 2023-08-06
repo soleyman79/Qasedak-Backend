@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 
+from creation.models import Member
+
 
 
 class Content(models.Model):
@@ -8,6 +10,7 @@ class Content(models.Model):
     summary = models.CharField(max_length=64)
     chanel = models.ForeignKey('Chanel', on_delete=models.CASCADE)
     pro = models.BooleanField(default=False)
+    price = models.IntegerField(default=0, null=True, blank=True)
     
     class Meta:
         abstract = True
@@ -39,5 +42,6 @@ class Chanel(models.Model):
   
     
 class Subscription(models.Model):
+    member = models.ForeignKey(member, on_delete=models.CASCADE)
     remaining = models.SmallIntegerField()
     chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
