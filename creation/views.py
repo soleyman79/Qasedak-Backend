@@ -3,20 +3,26 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
+from users.models import Session
+
 from .models import Chanel, Member, Owner
 from consumption.models import Text
 
 
 
 @csrf_exempt
-@login_required(login_url='loginFirst')
 def createChanel(request):
     if request.method == 'POST':
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return HttpResponse('Login First')
+        
         name = request.POST['name']
+        user = Session.objects.get(session=session).user
         try:
             chanel = Chanel.objects.create(name=name)
             owner = Owner.objects.create(chanel=chanel)
-            Member.objects.create(user=request.user, chanel=chanel, producer=owner)
+            Member.objects.create(user=user, chanel=chanel, producer=owner)
             return HttpResponse('Chanel Created')
         except:
             return HttpResponse('Duplicate Chanel Name')
@@ -26,10 +32,13 @@ def createChanel(request):
     
 
 @csrf_exempt
-@login_required(login_url='loginFirst')
 def createContent(request):
     if request.method == 'POST':
-        user = request.user
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return HttpResponse('Login First')
+        
+        user = Session.objects.get(session=session).user
         chanelName = request.POST['chanel']
         title = request.POST['title']
         summary = request.POST['summary']

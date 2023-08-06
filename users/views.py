@@ -1,9 +1,10 @@
+from django.http import JsonResponse
 from django.http.response import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login as dj_login, logout as dj_logout
+from django.contrib.auth import authenticate
 
 from .forms import SignUpForm
+from .models import Session
 
 
 @csrf_exempt
@@ -31,8 +32,8 @@ def login(request):
 
         user = authenticate(request, username=f'user-{username}', password=password)
         if user:
-            dj_login(request, user)
-            return HttpResponse('Login Completed')
+            session = Session.objects.create(user=user)
+            return JsonResponse({'status': 'OK', 'message': session.session})
         else:
             return HttpResponse('wrong password/username')
 
@@ -41,19 +42,15 @@ def login(request):
 
 
 @csrf_exempt
-@login_required(login_url='loginFirst')
 def logout(request):
     if request.method == 'POST':
-        if not request.user.is_authenticated:
-            return HttpResponse('please login first')
-
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return HttpResponse('Login First')
+        
         else:
-            dj_logout(request)
+            Session.objects.filter(session=session).delete()
             return HttpResponse('Logout Successfully')
 
     else:
         return HttpResponse('only POST method allowed')
-    
-    
-def loginFirst(request):
-    return HttpResponse('Login First')

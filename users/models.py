@@ -32,3 +32,8 @@ def generateUsername(email, phone):
     else:
         return f'user-{phone}'
     
+    
+class Session(models.Model):
+    session = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
