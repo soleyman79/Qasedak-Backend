@@ -29,8 +29,8 @@ class Photo(Content):
 
 class Chanel(models.Model):
     name = models.CharField(unique=True, max_length=128)
-    description = models.CharField(max_length=512)
-    currentProfit = models.IntegerField()
+    description = models.CharField(max_length=512, null=True, blank=True)
+    currentProfit = models.IntegerField(default=0)
     subscriptionPrice1 = models.SmallIntegerField(null=True, blank=True)
     subscriptionPrice2 = models.SmallIntegerField(null=True, blank=True)
     subscriptionPrice3 = models.SmallIntegerField(null=True, blank=True)

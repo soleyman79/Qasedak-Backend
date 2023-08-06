@@ -17,9 +17,10 @@ def createChanel(request):
             return HttpResponse('Login First')
         
         name = request.POST['name']
+        description = request.POST['description']
         user = Session.objects.get(session=session).user
         try:
-            chanel = Chanel.objects.create(name=name)
+            chanel = Chanel.objects.create(name=name, description=description)
             owner = Owner.objects.create(chanel=chanel)
             Member.objects.create(user=user, chanel=chanel, producer=owner)
             return HttpResponse('Chanel Created')
