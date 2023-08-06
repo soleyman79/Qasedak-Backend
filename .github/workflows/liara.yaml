@@ -2,8 +2,8 @@ name: CD-Liara
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - '*'
 
 jobs:
   deploy:
