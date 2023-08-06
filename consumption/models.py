@@ -42,6 +42,6 @@ class Chanel(models.Model):
   
     
 class Subscription(models.Model):
-    member = models.ForeignKey(member, on_delete=models.CASCADE)
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
     remaining = models.SmallIntegerField()
     chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
