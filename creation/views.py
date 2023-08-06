@@ -1,6 +1,5 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 from users.models import Session
