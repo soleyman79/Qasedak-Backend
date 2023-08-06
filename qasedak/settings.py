@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'users.apps.UsersConfig'
-    'production.apps.ProductionConfig'
+    'users.apps.UsersConfig',
+    'creation.apps.CreationConfig',
+    'consumption.apps.ConsumptionConfig',
 ]
 
 MIDDLEWARE = [
@@ -76,18 +77,18 @@ WSGI_APPLICATION = 'qasedak.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#     }
+# }
 
 
 # Password validation
