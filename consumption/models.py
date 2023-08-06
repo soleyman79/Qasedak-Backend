@@ -29,3 +29,13 @@ class Photo(Content):
 class Chanel(models.Model):
     name = models.CharField(unique=True, max_length=128)
     description = models.CharField(max_length=512)
+    subscriptionPrice1 = models.SmallIntegerField(null=True, blank=True)
+    subscriptionPrice2 = models.SmallIntegerField(null=True, blank=True)
+    subscriptionPrice3 = models.SmallIntegerField(null=True, blank=True)
+    subscriptionPrice4 = models.SmallIntegerField(null=True, blank=True)
+
+  
+    
+class Subscription(models.Model):
+    remaining = models.SmallIntegerField()
+    chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
