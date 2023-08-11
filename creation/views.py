@@ -43,6 +43,7 @@ def createContent(request):
         title = request.POST['title']
         summary = request.POST['summary']
         text = request.POST['text']
+        pro = request.POST['pro']
         
         if not Chanel.objects.filter(name=chanelName).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not exist'})
@@ -55,7 +56,7 @@ def createContent(request):
         if member.producer is None:
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Producer'})
         else:
-            Text.objects.create(title=title, summary=summary, chanel=chanel, text=text)
+            Text.objects.create(title=title, summary=summary, chanel=chanel, text=text, pro=pro)
             return JsonResponse({'status': 'OK', 'message': 'Content Added'})
 
     else:

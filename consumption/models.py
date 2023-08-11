@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 
-from creation.models import Member
+# from creation.models import Member
 
 
 
@@ -17,7 +17,7 @@ class Content(models.Model):
 
 
 class Text(Content):
-    text = models.TextField(max_length=512)
+    text = models.TextField(max_length=512, blank=True, null=True)
 
 
 class Video(Content):
@@ -38,10 +38,3 @@ class Chanel(models.Model):
     subscriptionPrice2 = models.SmallIntegerField(null=True, blank=True)
     subscriptionPrice3 = models.SmallIntegerField(null=True, blank=True)
     subscriptionPrice4 = models.SmallIntegerField(null=True, blank=True)
-
-  
-    
-class Subscription(models.Model):
-    member = models.ForeignKey(Member, on_delete=models.CASCADE)
-    remaining = models.SmallIntegerField()
-    chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)

@@ -2,8 +2,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
-from creation.models import Member, Chanel
+from creation.models import Member, Chanel, Subscription
 from users.models import Session
+from .models import Text
 
 
 
@@ -53,7 +54,7 @@ def joinChanel(request):
             return JsonResponse({'status': 'ERROR', 'message': 'Chanel not Exists'})
         
         chanel = Chanel.objects.get(name=chanelName)
-        if Member.objects.filter(Q(chanel=chanel) & Q(user=user)):
+        if Member.objects.filter(Q(chanel=chanel) & Q(user=user)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You are already a Member'})
         else:
             Member.objects.create(user=user, chanel=chanel)
@@ -62,4 +63,55 @@ def joinChanel(request):
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
     
     
+@csrf_exempt
+def chanelMessages(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        chanelName = request.POST['chanel_name']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel not Exists'})
+        
+        chanel = Chanel.objects.get(name=chanelName)
+        if not Member.objects.filter(Q(chanel=chanel) & Q(user=user)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
+        else:
+            contetns = Text.objects.filter(chanel=chanel)
+            return JsonResponse({'status': 'OK', 
+                                 'ids': list(contetns.values_list('id', flat=True)), 
+                                 'titles': list(contetns.values_list('title', flat=True)), 
+                                 'summaries': list(contetns.values_list('summary', flat=True)), 
+                                 'pros': list(contetns.values_list('pro', flat=True))})
 
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+
+
+def showMessage(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        messageId = request.POST['id']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        if not Text.objects.filter(id=messageId).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Message not Exist'})
+        
+        content = Text.objects.get(id=messageId)
+        chanel = content.chanel
+        if not Member.objects.filter(Q(user=user) & Q(chanel=chanel)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
+        
+        if content.pro and not Subscription.objects.filter(user=user, chanel=chanel).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'This Content is PRO'})
+
+        return JsonResponse({'status': 'OK', 
+                             'title': content.title,
+                             'text': content.text})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})

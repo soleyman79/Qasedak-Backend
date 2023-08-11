@@ -20,3 +20,9 @@ class Member(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
     producer = models.ForeignKey(Producer, on_delete=models.SET_NULL, null=True)
+
+
+class Subscription(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.CASCADE)
+    remaining = models.SmallIntegerField()
+    chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
