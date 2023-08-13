@@ -1,6 +1,6 @@
 from django.urls import path
 
-from consumption.views import userChannels, searchChanel, chanelMessages, showMessage
+from consumption.views import *
 
 
 

@@ -37,32 +37,34 @@ def searchChanel(request):
         channels = Chanel.objects.filter(Q(name__icontains=search) | Q(description__icontains=search))
         return JsonResponse({'status': 'OK',
                              'names': list(channels.values_list('name', flat=True)),
-                             'description': list(channels.values_list('description', flat=True))})
+                             'descriptions': list(channels.values_list('description', flat=True))})
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
     
-    
+  
 @csrf_exempt
 def joinChanel(request):
     if request.method == 'POST':
         session = request.POST['session']
-        chanelName = request.POST['chanel_name']
         if not Session.objects.filter(session=session).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
         
         user = Session.objects.get(session=session).user
+        chanelName = request.POST['chanel_name']
+        
         if not Chanel.objects.filter(name=chanelName).exists():
-            return JsonResponse({'status': 'ERROR', 'message': 'Chanel not Exists'})
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not exist'})
         
         chanel = Chanel.objects.get(name=chanelName)
-        if Member.objects.filter(Q(chanel=chanel) & Q(user=user)).exists():
+        if Member.objects.filter(Q(user=user) & Q(chanel=chanel)):
             return JsonResponse({'status': 'ERROR', 'message': 'You are already a Member'})
-        else:
-            Member.objects.create(user=user, chanel=chanel)
-            return JsonResponse({'status': 'OK', 'message': 'You Joined'})
+        
+        Member.objects.create(user=user, chanel=chanel)
+        return JsonResponse({'status': 'OK', 'message': 'Joined Successfully'})
+
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
-    
+
     
 @csrf_exempt
 def chanelMessages(request):

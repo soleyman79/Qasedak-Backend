@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import createChanel, createContent
+from .views import *
 
 
 urlpatterns = [
