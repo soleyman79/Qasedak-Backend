@@ -20,7 +20,7 @@ def userChannels(request):
         channels = Chanel.objects.filter(id__in=channelsId)
         return JsonResponse({'status': 'OK',
                              'names': list(channels.values_list('name', flat=True)),
-                             'description': list(channels.values_list('description', flat=True))})
+                             'descriptions': list(channels.values_list('description', flat=True))})
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
     
@@ -35,7 +35,8 @@ def searchChanel(request):
         
         user = Session.objects.get(session=session).user
         channels = Chanel.objects.filter(Q(name__icontains=search) | Q(description__icontains=search))
-        return JsonResponse({'names': list(channels.values_list('name', flat=True)),
+        return JsonResponse({'status': 'OK',
+                             'names': list(channels.values_list('name', flat=True)),
                              'description': list(channels.values_list('description', flat=True))})
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
@@ -90,6 +91,7 @@ def chanelMessages(request):
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
 
 
+@csrf_exempt
 def showMessage(request):
     if request.method == 'POST':
         session = request.POST['session']
@@ -106,7 +108,7 @@ def showMessage(request):
         if not Member.objects.filter(Q(user=user) & Q(chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
         
-        if content.pro and not Subscription.objects.filter(user=user, chanel=chanel).exists():
+        if content.pro and not Subscription.objects.filter(Q(member__user=user) & Q(chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'This Content is PRO'})
 
         return JsonResponse({'status': 'OK', 
