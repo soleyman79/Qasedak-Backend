@@ -33,7 +33,6 @@ def searchChanel(request):
         if not Session.objects.filter(session=session).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
         
-        user = Session.objects.get(session=session).user
         channels = Chanel.objects.filter(Q(name__icontains=search) | Q(description__icontains=search))
         return JsonResponse({'status': 'OK',
                              'names': list(channels.values_list('name', flat=True)),

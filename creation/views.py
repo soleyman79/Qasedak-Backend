@@ -61,3 +61,27 @@ def createContent(request):
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+
+    
+@csrf_exempt
+def getMembers(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        chanelName = request.POST['chanel_name']
+        
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not exist'})
+        
+        chanel = Chanel.objects.get(name=chanelName)
+        if not Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'You do not have permission'})
+        
+        return JsonResponse({'status': 'OK',
+                             'members': list(Member.objects.filter(chanel=chanel).values_list('user__username', flat=True))})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
