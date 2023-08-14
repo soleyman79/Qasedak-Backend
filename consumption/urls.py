@@ -8,5 +8,6 @@ urlpatterns = [
     path('channels', userChannels),
     path('search_chanel', searchChanel),
     path('messages', chanelMessages),
-    path('message', showMessage)
+    path('message', showMessage),
+    path('join', joinChanel)
 ]
