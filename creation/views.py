@@ -106,10 +106,7 @@ def getManagers(request):
         managers = Manager.objects.filter(chanel=chanel)
         
         return JsonResponse({'status': 'OK',
-                             'managers': list(Member.objects.filter(Q(chanel=chanel) & 
-                                                                    Q(producer__isnull=False) & 
-                                                                    Q(isinstance(F('producer'), Manager))
-                                                                    ).values_list('user__username', flat=True)),
+                             'managers': list(managers.values_list('member', flat=True)),
                              'profits': list(managers.values_list('profit', flat=True))})
 
     else:
