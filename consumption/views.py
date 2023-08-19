@@ -82,7 +82,17 @@ def chanelMessages(request):
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
         else:
             contetns = Text.objects.filter(chanel=chanel) # TODO role: 'owner', 'manager', 'member'
-            return JsonResponse({'status': 'OK', 
+            role = 'member'
+            owner = Owner.objects.get(chanel=chanel)
+            managers = Manager.objects.filter(chanel=chanel)
+            
+            if Member.objects.get(chanel=chanel, producer=owner).user == user:
+                role = 'owner'
+            elif Member.objects.filter(Q(user=user) & Q(producer__in=managers)).exists():
+                role = 'manager'
+
+            return JsonResponse({'status': 'OK',
+                                 'role': role,
                                  'ids': list(contetns.values_list('id', flat=True)), 
                                  'titles': list(contetns.values_list('title', flat=True)), 
                                  'summaries': list(contetns.values_list('summary', flat=True)), 
