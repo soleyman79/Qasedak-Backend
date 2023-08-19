@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Q
+from django.db.models import Q, F
 
 from users.models import Session
 
@@ -103,11 +103,14 @@ def getManagers(request):
         if not Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You do not have permission'})
         
-        bosses = Member.objects.filter(Q(chanel=chanel) & Q(producer__isnull=False))
+        managers = Manager.objects.filter(chanel=chanel)
         
         return JsonResponse({'status': 'OK',
-                             'managers': list(bosses.values_list('user__username', flat=True)),
-                             'profits': list(bosses.values_list('producer__profit', flat=True))})
+                             'managers': list(Member.objects.filter(Q(chanel=chanel) & 
+                                                                    Q(producer__isnull=False) & 
+                                                                    Q(isinstance(F('producer'), Manager))
+                                                                    ).values_list('user__username', flat=True)),
+                             'profits': list(managers.values_list('profit', flat=True))})
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
