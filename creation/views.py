@@ -4,7 +4,7 @@ from django.db.models import Q
 
 from users.models import Session
 
-from .models import Chanel, Member, Owner
+from .models import *
 from consumption.models import Text
 
 
@@ -82,6 +82,28 @@ def getMembers(request):
         
         return JsonResponse({'status': 'OK',
                              'members': list(Member.objects.filter(chanel=chanel).values_list('user__username', flat=True))})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+    
+@csrf_exempt
+def getManagers(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        chanelName = request.POST['chanel_name']
+        
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not exist'})
+        
+        chanel = Chanel.objects.get(name=chanelName)
+        managers = Manager.objects.filter(chanel=chanel)
+        
+        return JsonResponse({'status': 'OK',
+                             'managers': list(Member.objects.filter(Q(chanel=chanel) & Q(producer__isnull=False)).values_list('user__username', flat=True)),
+                             'profits': list(managers.values_list('profit', flat=True))})
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
