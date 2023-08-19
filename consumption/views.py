@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 
-from creation.models import Member, Chanel, Subscription
+from creation.models import *
 from users.models import Session
 from .models import Text
 
@@ -81,7 +81,7 @@ def chanelMessages(request):
         if not Member.objects.filter(Q(chanel=chanel) & Q(user=user)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
         else:
-            contetns = Text.objects.filter(chanel=chanel)
+            contetns = Text.objects.filter(chanel=chanel) # TODO role: 'owner', 'manager', 'member'
             return JsonResponse({'status': 'OK', 
                                  'ids': list(contetns.values_list('id', flat=True)), 
                                  'titles': list(contetns.values_list('title', flat=True)), 
@@ -109,7 +109,8 @@ def showMessage(request):
         if not Member.objects.filter(Q(user=user) & Q(chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
         
-        if content.pro and not Subscription.objects.filter(Q(member__user=user) & Q(chanel=chanel)).exists():
+        if content.pro and not (Subscription.objects.filter(Q(member__user=user) & Q(chanel=chanel)).exists() or 
+                                Member.objects.filter(Q(chanel=chanel) & Q(producer__isnull=False)).exists()):
             return JsonResponse({'status': 'ERROR', 'message': 'This Content is PRO'})
 
         return JsonResponse({'status': 'OK', 
