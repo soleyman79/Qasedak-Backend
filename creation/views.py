@@ -154,12 +154,12 @@ def addManager(request):
         chanelName = request.POST['chanel_name']
         
         if not Chanel.objects.filter(name=chanelName).exists():
-            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not exist'})
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not Exist'})
         chanel = Chanel.objects.get(name=chanelName)
 
         username = request.POST['username']
         if not User.objects.filter(username=username):
-            return JsonResponse({'status': 'ERROR', 'message': 'User does not exist'})
+            return JsonResponse({'status': 'ERROR', 'message': 'User does not Exist'})
         
         if not Member.objects.filter(Q(user__username=username) & Q(chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'This user is not a Member'})
@@ -171,7 +171,7 @@ def addManager(request):
         if Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel)).exists():
             boss = Member.objects.get(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel))
             if boss.getProducer() == 'Manager':
-                return JsonResponse({'status': 'ERROR', 'message': 'You do not have permission'})
+                return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
             else:
                 manager = Manager.objects.create(chanel=chanel, profit=profit)
                 member = Member.objects.get(user__username=username)

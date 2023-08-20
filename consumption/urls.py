@@ -10,5 +10,6 @@ urlpatterns = [
     path('messages', chanelMessages),
     path('message', showMessage),
     path('join', joinChanel),
-    path('chanel_info', chanelInfo)
+    path('chanel_info', chanelInfo),
+    path('my_subs', mySubscriptions),
 ]
