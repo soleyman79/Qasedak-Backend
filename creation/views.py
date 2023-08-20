@@ -182,3 +182,21 @@ def addManager(request):
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+    
+    
+@csrf_exempt
+def addCredit(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        credit = request.POST['credit']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        user.credit = user.credit + credit
+        user.save()
+        
+        return JsonResponse({'status': 'OK', 'message': f'{credit} added to Credit'})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
