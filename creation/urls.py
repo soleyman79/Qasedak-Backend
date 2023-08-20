@@ -7,5 +7,6 @@ urlpatterns = [
     path('content', createContent),
     path('get_members', getMembers),
     path('get_managers', getManagers),
-    path('update_chanel', updateChanel)
+    path('update_chanel', updateChanel),
+    path('add_manager', addManager),
 ]

@@ -20,6 +20,9 @@ class Member(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
     chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
     producer = models.ForeignKey(Producer, on_delete=models.SET_NULL, null=True)
+    
+    def getProducer(self):
+        return self.producer.__class__.__subclasses__()[0].__name__
 
 
 class Subscription(models.Model):
