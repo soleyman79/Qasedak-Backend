@@ -129,3 +129,27 @@ def showMessage(request):
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+    
+    
+@csrf_exempt
+def chanelInfo(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        chanelName = request.POST['chanel_name']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel not Exists'})
+        
+        chanel = Chanel.objects.get(name=chanelName)
+        return JsonResponse({'status': 'OK',
+                             'description': chanel.description,
+                             "1": chanel.subscriptionPrice1,
+                             "3": chanel.subscriptionPrice2,
+                             "6": chanel.subscriptionPrice3,
+                             "12": chanel.subscriptionPrice4,})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
