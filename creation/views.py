@@ -161,11 +161,11 @@ def addManager(request):
         if not User.objects.filter(username=username):
             return JsonResponse({'status': 'ERROR', 'message': 'User does not Exist'})
         
+        if user.username == username:
+            return JsonResponse({'status': 'ERROR', 'message': 'Can not Promote Yourself'})
+        
         if not Member.objects.filter(Q(user__username=username) & Q(chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'This user is not a Member'})
-        
-        if user.username == username:
-            return JsonResponse({'status': 'ERROR', 'message': 'Owner can not be a Manager'})
         
         profit = request.POST['profit']
         if Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel)).exists():
@@ -178,7 +178,8 @@ def addManager(request):
                 member.producer = manager
                 member.save()
                 return JsonResponse({'status': 'OK', 'message': 'Manager Added'})
-        
+        else:
+            return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
