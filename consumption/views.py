@@ -180,3 +180,17 @@ def mySubscriptions(request):
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+
+    
+@csrf_exempt
+def credit(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        return JsonResponse({'status': 'OK', 'credit': user.credit})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})

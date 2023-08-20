@@ -12,4 +12,5 @@ urlpatterns = [
     path('join', joinChanel),
     path('chanel_info', chanelInfo),
     path('my_subs', mySubscriptions),
+    path('credit', credit),
 ]
