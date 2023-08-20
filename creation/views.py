@@ -111,3 +111,32 @@ def getManagers(request):
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+    
+    
+@csrf_exempt
+def updateChanel(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        chanelName = request.POST['chanel_name']
+        
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not exist'})
+        
+        chanel = Chanel.objects.get(name=chanelName)
+        if not Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'You do not have permission'})
+        
+        chanel.subscriptionPrice1 = request.POST['1']
+        chanel.subscriptionPrice2 = request.POST['3']
+        chanel.subscriptionPrice3 = request.POST['6']
+        chanel.subscriptionPrice4 = request.POST['12']
+        
+        return JsonResponse({'status': 'OK',
+                             'message': 'Chanel Info Updated'})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
