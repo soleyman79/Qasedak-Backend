@@ -26,6 +26,7 @@ class Member(models.Model):
 
 
 class Subscription(models.Model):
+    subType = models.CharField(max_length=1, default="1")
     member = models.ForeignKey(Member, on_delete=models.CASCADE)
     remaining = models.SmallIntegerField()
     chanel = models.ForeignKey(Chanel, on_delete=models.CASCADE)
