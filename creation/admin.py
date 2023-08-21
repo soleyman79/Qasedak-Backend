@@ -3,7 +3,7 @@ from .models import Manager
 
 
 class ManagerAdmin(admin.ModelAdmin):
-    list_display = ['profit', 'chanel__name']
+    list_display = ['profit', 'chanel']
 
 admin.site.register(Manager, ManagerAdmin)
 
