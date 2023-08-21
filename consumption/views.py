@@ -120,7 +120,7 @@ def showMessage(request):
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
         
         if content.pro and not (Subscription.objects.filter(Q(member__user=user) & Q(chanel=chanel)).exists() or 
-                                Member.objects.filter(Q(chanel=chanel) & Q(producer__isnull=False)).exists()):
+                                Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__isnull=False)).exists()):
             return JsonResponse({'status': 'ERROR', 'message': 'This Content is PRO'})
 
         return JsonResponse({'status': 'OK', 
