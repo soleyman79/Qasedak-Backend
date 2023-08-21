@@ -9,5 +9,6 @@ urlpatterns = [
     path('get_managers', getManagers),
     path('update_chanel', updateChanel),
     path('add_manager', addManager),
+    path('set_profit', setProfit),
     path('add_credit', addCredit),
 ]

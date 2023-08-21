@@ -189,6 +189,44 @@ def addManager(request):
     
     
 @csrf_exempt
+def setProfit(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+        chanelName = request.POST['chanel_name']
+        
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not Exist'})
+        chanel = Chanel.objects.get(name=chanelName)
+
+        username = request.POST["username"]
+        if not User.objects.filter(username=username):
+            return JsonResponse({'status': 'ERROR', 'message': 'User does not Exist'})
+        
+        if not Member.objects.filter(Q(user__username=username) & Q(chanel=chanel)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'This user is not a Member'})
+        
+        profit = request.POST['profit']
+        if Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel)).exists():
+            boss = Member.objects.get(Q(user=user) & Q(chanel=chanel) & Q(producer__chanel=chanel))
+            if boss.getProducer() == 'Manager':
+                return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
+            else:
+                manager = Manager.objects.get(Q(chanel=chanel) & Q(member__user__username=username))
+                manager.profit = profit
+                manager.save()
+                return JsonResponse({'status': 'OK', 'message': 'Profit Updated'})
+        else:
+            return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+    
+
+@csrf_exempt
 def addCredit(request):
     if request.method == 'POST':
         session = request.POST['session']
