@@ -12,7 +12,11 @@ class SignUpForm(UserCreationForm):
 
     def is_valid(self):
         if not super().is_valid():
-            return 'Not Valid Format'
+            errorMessage = ''
+            for message in list(super().errors.values()):
+                errorMessage += message[0] + '\n'
+            print(errorMessage)
+            return errorMessage
         try:
             if User.objects.filter(Q(username=f'user-{self.cleaned_data["email"]}') | Q(username=f'user-{self.cleaned_data["phone"]}')):
                 return 'Duplicate Username'
