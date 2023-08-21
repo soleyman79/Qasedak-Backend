@@ -106,7 +106,7 @@ def getManagers(request):
         managers = Manager.objects.filter(chanel=chanel)
         
         return JsonResponse({'status': 'OK',
-                             'managers': list(managers.values_list('member', flat=True)),
+                             'managers': list(managers.values_list('member__user__username', flat=True)),
                              'profits': list(managers.values_list('profit', flat=True))})
 
     else:
@@ -157,7 +157,7 @@ def addManager(request):
             return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not Exist'})
         chanel = Chanel.objects.get(name=chanelName)
 
-        username = request.POST['username']
+        username = f'user-{request.POST["username"]}'
         if not User.objects.filter(username=username):
             return JsonResponse({'status': 'ERROR', 'message': 'User does not Exist'})
         
@@ -177,6 +177,7 @@ def addManager(request):
                 member = Member.objects.get(user__username=username)
                 member.producer = manager
                 member.save()
+                print(member)
                 return JsonResponse({'status': 'OK', 'message': 'Manager Added'})
         else:
             return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
@@ -194,7 +195,7 @@ def addCredit(request):
             return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
         
         user = Session.objects.get(session=session).user
-        user.credit = user.credit + credit
+        user.credit = user.credit + int(credit)
         user.save()
         
         return JsonResponse({'status': 'OK', 'message': f'{credit} added to Credit'})

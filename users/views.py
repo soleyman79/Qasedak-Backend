@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate
 
 from .forms import SignUpForm
 from .models import Session
+from creation.models import *
 
 
 @csrf_exempt
