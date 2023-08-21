@@ -25,5 +25,4 @@ class SignUpForm(UserCreationForm):
             pass
 
     def save(self, commit=True):
-        user = super().save(commit=commit)
-        return user
+        super().save(commit=commit)
