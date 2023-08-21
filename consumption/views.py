@@ -81,7 +81,7 @@ def chanelMessages(request):
         if not Member.objects.filter(Q(chanel=chanel) & Q(user=user)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
         else:
-            contetns = Text.objects.filter(chanel=chanel)
+            contents = Text.objects.filter(chanel=chanel)
             role = 'member'
             owner = Owner.objects.get(chanel=chanel)
             managers = Manager.objects.filter(chanel=chanel)
@@ -93,10 +93,10 @@ def chanelMessages(request):
 
             return JsonResponse({'status': 'OK',
                                  'role': role,
-                                 'ids': list(contetns.values_list('id', flat=True)), 
-                                 'titles': list(contetns.values_list('title', flat=True)), 
-                                 'summaries': list(contetns.values_list('summary', flat=True)), 
-                                 'pros': list(contetns.values_list('pro', flat=True))})
+                                 'ids': list(contents.values_list('id', flat=True)), 
+                                 'titles': list(contents.values_list('title', flat=True)), 
+                                 'summaries': list(contents.values_list('summary', flat=True)), 
+                                 'pros': list(contents.values_list('pro', flat=True))})
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})

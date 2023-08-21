@@ -157,7 +157,7 @@ def addManager(request):
             return JsonResponse({'status': 'ERROR', 'message': 'Chanel does not Exist'})
         chanel = Chanel.objects.get(name=chanelName)
 
-        username = f'user-{request.POST["username"]}'
+        username = request.POST["username"]
         if not User.objects.filter(username=username):
             return JsonResponse({'status': 'ERROR', 'message': 'User does not Exist'})
         
@@ -174,10 +174,9 @@ def addManager(request):
                 return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
             else:
                 manager = Manager.objects.create(chanel=chanel, profit=profit)
-                member = Member.objects.get(user__username=username)
+                member = Member.objects.get(Q(user__username=username) & Q(chanel=chanel))
                 member.producer = manager
                 member.save()
-                print(member)
                 return JsonResponse({'status': 'OK', 'message': 'Manager Added'})
         else:
             return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
