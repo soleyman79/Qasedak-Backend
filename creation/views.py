@@ -173,6 +173,9 @@ def addManager(request):
             if boss.getProducer() == 'Manager':
                 return JsonResponse({'status': 'ERROR', 'message': 'You do not have Permission'})
             else:
+                if Member.objects.filter(Q(user__username=username) & Q(chanel=chanel) & Q(producer__isnull=False)).exists():
+                    return JsonResponse({'status': 'ERROR', 'message': 'Already a Manager'})
+
                 manager = Manager.objects.create(chanel=chanel, profit=profit)
                 member = Member.objects.get(Q(user__username=username) & Q(chanel=chanel))
                 member.producer = manager

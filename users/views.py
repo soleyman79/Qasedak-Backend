@@ -4,12 +4,10 @@ from django.contrib.auth import authenticate
 
 from .forms import SignUpForm
 from .models import Session
-# from creation.models import *
 
 
 @csrf_exempt
 def signup(request):
-    # Manager.objects.all().delete()
     if request.method == 'POST':
         form = SignUpForm(request.POST)
 
