@@ -149,7 +149,8 @@ def chanelInfo(request):
                              "1": chanel.subscriptionPrice1,
                              "3": chanel.subscriptionPrice2,
                              "6": chanel.subscriptionPrice3,
-                             "12": chanel.subscriptionPrice4,})
+                             "12": chanel.subscriptionPrice4,
+                             'profit': chanel.currentProfit})
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
