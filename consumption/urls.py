@@ -13,4 +13,5 @@ urlpatterns = [
     path('chanel_info', chanelInfo),
     path('my_subs', mySubscriptions),
     path('credit', credit),
+    path('leave', leaveChanel)
 ]

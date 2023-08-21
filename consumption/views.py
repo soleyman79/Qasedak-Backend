@@ -194,3 +194,30 @@ def credit(request):
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
+    
+
+@csrf_exempt
+def leaveChanel(request):
+    if request.method == 'POST':
+        session = request.POST['session']
+        chanelName = request.POST['chanel_name']
+        if not Session.objects.filter(session=session).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Login First'})
+        
+        user = Session.objects.get(session=session).user
+
+        if not Chanel.objects.filter(name=chanelName).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Chanel not Exists'})
+        
+        chanel = Chanel.objects.get(name=chanelName)
+        if not Member.objects.filter(Q(user=user) & Q(chanel=chanel)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
+
+        if Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__isnull=False)).exists():
+            return JsonResponse({'status': 'ERROR', 'message': 'Producers can not leave'})
+
+        Member.objects.get(Q(user=user) & Q(chanel=chanel)).delete()
+        return JsonResponse({'status': 'OK', 'message': 'Left Chanel'})
+
+    else:
+        return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
