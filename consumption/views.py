@@ -240,12 +240,27 @@ def buySubscription(request):
         chanel = Chanel.objects.get(name=chanelName)
         if not Member.objects.filter(Q(user=user) & Q(chanel=chanel)).exists():
             return JsonResponse({'status': 'ERROR', 'message': 'You are not a Member'})
+        member = Member.objects.get(Q(user=user) & Q(chanel=chanel))
 
-        if Member.objects.filter(Q(user=user) & Q(chanel=chanel) & Q(producer__isnull=False)).exists():
-            return JsonResponse({'status': 'ERROR', 'message': 'Producers can not leave'})
-
-        Member.objects.get(Q(user=user) & Q(chanel=chanel)).delete()
-        return JsonResponse({'status': 'OK', 'message': 'Left Chanel'})
+        subType = request.POST['type']
+        price = None
+        if subType == '1':
+            price = chanel.subscriptionPrice1
+        elif subType == '3':
+            price = chanel.subscriptionPrice2
+        elif subType == '6':
+            price = chanel.subscriptionPrice3
+        elif subType == '12':
+            price = chanel.subscriptionPrice4
+        else:
+            return JsonResponse({'status': 'ERROR', 'message': 'Invalid Subscription Type'})
+        print(chanel.subscriptionPrice1)
+        if user.credit < price:
+            return JsonResponse({'status': 'ERROR', 'message': 'Not Enough Credit'})
+        else:
+            Subscription.objects.create(chanel=chanel, member=member, subType=subType, remaining=int(subType) * 30)
+            return JsonResponse({'status': 'ERROR', 'message': 'Subscription Added'})
+ 
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
