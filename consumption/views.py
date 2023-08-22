@@ -254,7 +254,7 @@ def buySubscription(request):
             price = chanel.subscriptionPrice4
         else:
             return JsonResponse({'status': 'ERROR', 'message': 'Invalid Subscription Type'})
-        print(chanel.subscriptionPrice1)
+
         if user.credit < price:
             return JsonResponse({'status': 'ERROR', 'message': 'Not Enough Credit'})
         else:
@@ -264,7 +264,6 @@ def buySubscription(request):
             chanel.currentProfit = chanel.currentProfit + price
             chanel.save()
             return JsonResponse({'status': 'OK', 'message': 'Subscription Added'})
- 
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
