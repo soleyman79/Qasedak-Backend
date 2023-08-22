@@ -137,8 +137,7 @@ def updateChanel(request):
         chanel.description = request.POST['description']
         chanel.save()
         
-        return JsonResponse({'status': 'OK',
-                             'message': 'Chanel Info Updated'})
+        return JsonResponse({'status': 'OK', 'message': 'Chanel Info Updated'})
 
     else:
         return JsonResponse({'status': 'ERROR', 'message': 'only POST method allowed'})
