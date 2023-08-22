@@ -134,6 +134,7 @@ def updateChanel(request):
         chanel.subscriptionPrice2 = request.POST['3']
         chanel.subscriptionPrice3 = request.POST['6']
         chanel.subscriptionPrice4 = request.POST['12']
+        chanel.description = request.POST['description']
         chanel.save()
         
         return JsonResponse({'status': 'OK',
