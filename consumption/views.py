@@ -259,7 +259,11 @@ def buySubscription(request):
             return JsonResponse({'status': 'ERROR', 'message': 'Not Enough Credit'})
         else:
             Subscription.objects.create(chanel=chanel, member=member, subType=subType, remaining=int(subType) * 30)
-            return JsonResponse({'status': 'ERROR', 'message': 'Subscription Added'})
+            user.credit = user.credit - price
+            user.save()
+            chanel.currentProfit = chanel.currentProfit + price
+            chanel.save()
+            return JsonResponse({'status': 'OK', 'message': 'Subscription Added'})
  
 
     else:
